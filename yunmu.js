@@ -66,7 +66,7 @@ var yunmuDict = {
                ["b(an)", "p(an)", "m(an)", "f(an)", "d(an)", "t(an)", "n(an)", "l(an)", "g(an)", "k(an)",
                 "h(an)", "zh(an)", "ch(an)", "sh(an)", "r(an)", "z(an)", "c(an)", "s(an)", "y(an)",
                 "w(an)", "bi(an)", "pi(an)", "mi(an)", "di(an)", "ti(an)", "ni(an)", "li(an)", "ji(an)",
-                "qi(an)", "xi(an)"] ],
+                "qi(an)", "xi(an)", "ju(an)", "qu(an)", "yu(an)"] ],
         "en": ["en", "ēn", "én", "ěn", "èn",
                ["b(en)", "p(en)", "m(en)", "f(en)", "d(en)", "t(en)", "n(en)", "l(en)", "g(en)", "k(en)",
                 "h(en)", "zh(en)", "ch(en)", "sh(en)", "r(en)", "z(en)", "c(en)", "s(en)", "w(en)"] ],
@@ -122,12 +122,10 @@ var yunmuDict = {
                 var head = pattern.substr(0, lb);
                 var match = pattern.substring(lb+1, rb);
                 var tail = pattern.substr(rb+1);
-
-                matchPinyinHash[head+this._yunmus[match][0]+tail] = "";
-                matchPinyinHash[head+this._yunmus[match][1]+tail] = "";
-                matchPinyinHash[head+this._yunmus[match][2]+tail] = "";
-                matchPinyinHash[head+this._yunmus[match][3]+tail] = "";
-                matchPinyinHash[head+this._yunmus[match][4]+tail] = "";
+                
+                for (var j = 0; j < 5; j++) {
+                    matchPinyinHash[head+this._yunmus[match][j]+tail] = "";
+                }
             }
         }
         
