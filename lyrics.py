@@ -5,68 +5,12 @@ import io
 import json
 import os
 
-def load_lyric(file):
-    with open(file, mode='r', encoding='utf-8') as file_obj:
-        content = file_obj.read()
-
-    return json.loads(content)
-
-def str_contains_latin(s):
-    pattern = "[a-zA-Z]"
-    re_obj = re.search(pattern, s)
-    return re_obj is not None
-
-all_zi_count = {}
-
-def count_last_zi(lyric_line_array):
-    line_set = set()
-    for line in lyric_line_array:
-        new_line = line.replace(",", "").replace(".", "")\
-            .replace("，", "").replace("。", "").replace("…", "").replace(" ", "")
-        if new_line == "":
-            continue
-
-        if new_line in line_set:
-            continue
-
-        last_zi = new_line[-1]
-        if last_zi < u'\u4e00' or last_zi > u'\u9fff':
-            continue
-        
-        line_set.add(new_line)
-        if last_zi in all_zi_count:
-            all_zi_count[last_zi] += 1
-        else:
-            all_zi_count[last_zi] = 1
-
-def count_lyrics_last_zis():
-    lyric_files = [
-            r"E:\git_code\ChineseLyrics\lyrics1.json",
-            r"E:\git_code\ChineseLyrics\lyrics2.json",
-            r"E:\git_code\ChineseLyrics\lyrics3.json",
-            r"E:\git_code\ChineseLyrics\lyrics4.json",
-            r"E:\git_code\ChineseLyrics\lyrics5.json",
-        ]
-
-    for lyric_file in lyric_files:
-        lyric_json = load_lyric(lyric_file)
-        for lyric_obj in lyric_json:
-            singer = lyric_obj["singer"]
-            name = lyric_obj["name"]
-
-            if str_contains_latin(name):
-                continue
-
-            print(singer, name)
-            count_last_zi(lyric_obj["lyric"])
-
-    print(all_zi_count, len(all_zi_count))
-
 yunmus_match = {
     "a": {},
     "o": { "ex": ["ao"] },
     "e": { "ex": ["ie", "üe", "ue"] },
-    "i": { "ex": ["ai", "ei", "ui"] },
+    "i": { "ex": ["ai", "ei", "ui", "zi", "ci", "si", "ri", "zhi", "chi", "shi"] },
+    "i2": { "match": ["zi", "ci", "si", "ri", "zhi", "chi", "shi"] },
     "u": { "ex": ["ou", "iu", "ju", "qu", "xu", "yu"] },
     "ü": { "match": ["ü", "ju", "qu", "xu", "yu"], "ex": ["ou", "iu"] },
     "ai": {},
@@ -114,7 +58,7 @@ def list_zis_by_yunmu(yunmu):
         
         plain_pinyin = pinyin\
             .replace("ā", "a").replace("á", "a").replace("ǎ", "a").replace("à", "a")\
-            .replace("ō", "o").replace("ō", "o").replace("ō", "o").replace("ō", "o")\
+            .replace("ō", "o").replace("ó", "o").replace("ǒ", "o").replace("ò", "o")\
             .replace("ē", "e").replace("é", "e").replace("ě", "e").replace("è", "e")\
             .replace("ī", "i").replace("í", "i").replace("ǐ", "i").replace("ì", "i")\
             .replace("ū", "u").replace("ú", "u").replace("ǔ", "u").replace("ù", "u")\
@@ -142,12 +86,6 @@ def list_zis_by_yunmu(yunmu):
             result.append((zi, pinyin))
 
     return result
-    
-def load_zi_pinyins():
-    with open(os.path.split(os.path.realpath(__file__))[0] + "\\zi_pinyin.json", mode='r', encoding='utf-8') as file_obj:
-        content = file_obj.read()
-        zi_pinyins = json.loads(content)
-
 
 if __name__ == '__main__':
     zi_freq_obj = {}
@@ -159,7 +97,7 @@ if __name__ == '__main__':
         content = file_obj.read()
         zi_pinyins = json.loads(content)
 
-    result = list_zis_by_yunmu("ing")
+    result = list_zis_by_yunmu("ao")
     zi_pinyin_freq_array = []
     for (zi, pinyin) in result:
         freq = zi_freq_obj[zi] if zi in zi_freq_obj else 0
