@@ -1,7 +1,4 @@
 #-*- coding: utf8 -*-
-import re
-import sys
-import io
 import json
 import os
 
@@ -37,6 +34,7 @@ yunmus_match = {
 zi_pinyins = []
 
 def list_zis_by_yunmu(yunmu):
+    global zi_pinyins
     zis = []
     if not yunmu in yunmus_match:
         return zis
@@ -87,7 +85,8 @@ def list_zis_by_yunmu(yunmu):
 
     return result
 
-if __name__ == '__main__':
+def print_by_yunmu(yunmu):
+    global zi_pinyins
     zi_freq_obj = {}
     with open(os.path.split(os.path.realpath(__file__))[0] + "\\zi_freq.json", mode='r', encoding='utf-8') as file_obj:
         content = file_obj.read()
@@ -97,17 +96,18 @@ if __name__ == '__main__':
         content = file_obj.read()
         zi_pinyins = json.loads(content)
 
-    result = list_zis_by_yunmu("ao")
+    result = list_zis_by_yunmu(yunmu)
     zi_pinyin_freq_array = []
     for (zi, pinyin) in result:
         freq = zi_freq_obj[zi] if zi in zi_freq_obj else 0
         zi_pinyin_freq_array.append((zi, pinyin, freq))
-        line = "{}({})\t{}".format(zi, pinyin, freq)
-        #print(line)
     
     zi_pinyin_freq_array.sort(key=lambda x:(x[2], x[1]), reverse=True)
     for item in zi_pinyin_freq_array:
         print(item)
+
+if __name__ == '__main__':
+    print_by_yunmu("ang")
 
 
 
