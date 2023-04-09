@@ -1,6 +1,7 @@
 #-*- coding: utf8 -*-
 import json
 import os
+import sys
 
 yunmus_match = {
     "a": {},
@@ -35,6 +36,8 @@ zi_pinyins = []
 
 def list_zis_by_yunmu(yunmu):
     global zi_pinyins
+    global yunmus_match
+
     zis = []
     if not yunmu in yunmus_match:
         return zis
@@ -107,7 +110,16 @@ def print_by_yunmu(yunmu):
         print(item)
 
 if __name__ == '__main__':
-    print_by_yunmu("ang")
+    if len(sys.argv) < 2:
+        print("请指定一个韵母！")
+        sys.exit(1)
+
+    yunmu = sys.argv[1]
+    if not yunmu in yunmus_match:
+        print("韵母不正确！")
+        sys.exit(1)
+
+    print_by_yunmu(yunmu)
 
 
 
