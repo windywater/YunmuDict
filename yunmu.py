@@ -91,11 +91,12 @@ def list_zis_by_yunmu(yunmu):
 def print_by_yunmu(yunmu):
     global zi_pinyins
     zi_freq_obj = {}
-    with open(os.path.split(os.path.realpath(__file__))[0] + "\\zi_freq.json", mode='r', encoding='utf-8') as file_obj:
+    cur_path = os.path.split(os.path.realpath(__file__))[0]
+    with open(cur_path + "\\zi_freq.json", mode='r', encoding='utf-8') as file_obj:
         content = file_obj.read()
         zi_freq_obj = json.loads(content)
 
-    with open(os.path.split(os.path.realpath(__file__))[0] + "\\zi_pinyin.json", mode='r', encoding='utf-8') as file_obj:
+    with open(cur_path + "\\zi_pinyin.json", mode='r', encoding='utf-8') as file_obj:
         content = file_obj.read()
         zi_pinyins = json.loads(content)
 
@@ -108,18 +109,31 @@ def print_by_yunmu(yunmu):
     zi_pinyin_freq_array.sort(key=lambda x:(x[2], x[1]), reverse=True)
     for item in zi_pinyin_freq_array:
         print(item)
+        
+def print_by_last_zi(zi):
+    cur_path = os.path.split(os.path.realpath(__file__))[0]
+    with open(cur_path + "\\zi_ci_min.json", mode='r', encoding='utf-8') as file_obj:
+        content = file_obj.read()
+        zi_ci_obj = json.loads(content)
+        if not zi in zi_ci_obj:
+            print("找不到词语！")
+            sys.exit(1)
+            
+        for ci in zi_ci_obj[zi]:
+            print(ci)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print("请指定一个韵母！")
         sys.exit(1)
 
-    yunmu = sys.argv[1]
-    if not yunmu in yunmus_match:
-        print("韵母不正确！")
-        sys.exit(1)
+    key = sys.argv[1]
+    if key in yunmus_match:
+        print_by_yunmu(key)
+    else:
+        print_by_last_zi(key)
 
-    print_by_yunmu(yunmu)
+    
 
 
 
